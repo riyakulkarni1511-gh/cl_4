@@ -1,0 +1,65 @@
+# Step 1: Import libraries
+import tensorflow as tf
+from tensorflow.keras import datasets, layers, models
+import matplotlib.pyplot as plt
+
+# Step 2: Load CIFAR-10 dataset
+(x_train, y_train), (x_test, y_test) = datasets.cifar10.load_data()
+
+# Step 3: Normalize data
+x_train = x_train / 255.0
+x_test = x_test / 255.0
+
+# Step 4: Define class names
+class_names = ['Airplane', 'Automobile', 'Bird', 'Cat',
+               'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck']
+
+# Step 5: Build CNN model
+model = models.Sequential()
+
+# Convolution Layer 1
+model.add(layers.Conv2D(32, (3,3), activation='relu',
+                        input_shape=(32,32,3)))
+
+# Pooling Layer
+model.add(layers.MaxPooling2D((2,2)))
+
+# Convolution Layer 2
+model.add(layers.Conv2D(64, (3,3), activation='relu'))
+
+# Pooling Layer
+model.add(layers.MaxPooling2D((2,2)))
+
+# Flatten Layer
+model.add(layers.Flatten())
+
+# Dense Layer
+model.add(layers.Dense(64, activation='relu'))
+
+# Output Layer
+model.add(layers.Dense(10, activation='softmax'))
+
+# Step 6: Compile model
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Step 7: Train model
+history = model.fit(x_train, y_train,
+                    epochs=5,
+                    validation_data=(x_test, y_test))
+
+# Step 8: Evaluate model
+test_loss, test_acc = model.evaluate(x_test, y_test)
+
+print("Test Accuracy:", test_acc)
+
+# Step 9: Predict one image
+prediction = model.predict(x_test)
+
+print("Predicted Class:",
+      class_names[prediction[0].argmax()])
+
+# Step 10: Display image
+plt.imshow(x_test[0])
+plt.show()
