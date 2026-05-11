@@ -1,0 +1,47 @@
+server:
+from xmlrpc.server import SimpleXMLRPCServer
+import threading
+import math
+
+# factorial function
+def factorial(n):
+    return math.factorial(n)
+
+# function to start server
+def start_server():
+    
+    # create server
+    server = SimpleXMLRPCServer(("localhost", 9000), logRequests=False)
+    
+    # register factorial function
+    server.register_function(factorial, "factorial")
+    
+    print("Server started on port 9000...")
+    
+    # keep server running
+    server.serve_forever()
+
+# run server in background
+server_thread = threading.Thread(target=start_server)
+
+# stop automatically when notebook stops
+server_thread.daemon = True
+
+# start server
+server_thread.start()
+
+
+client:
+import xmlrpc.client
+
+# connect client to server
+proxy = xmlrpc.client.ServerProxy("http://localhost:9000/")
+
+# take input
+num = int(input("Enter number: "))
+
+# remote procedure call
+result = proxy.factorial(num)
+
+# display result
+print("Factorial =", result)
