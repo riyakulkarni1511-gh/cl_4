@@ -1,0 +1,22 @@
+from xmlrpc.server import SimpleXMLRPCServer
+import xmlrpc.client
+import threading
+import math
+
+def factorial(n):
+    return math.factorial(n)
+
+def start_server():
+    server = SimpleXMLRPCServer(("localhost", 9000))
+    server.register_function(factorial, "factorial")
+    server.serve_forever()
+
+threading.Thread(target=start_server, daemon=True).start()
+
+proxy = xmlrpc.client.ServerProxy("http://localhost:9000/")
+
+num = int(input("Enter number: "))
+
+result = proxy.factorial(num)
+
+print("Factorial =", result)
