@@ -1,0 +1,75 @@
+# Artificial Immune Pattern Recognition (AIPR)
+# Structure Damage Classification
+
+# Import Libraries
+import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.pyplot as plt
+
+# Training Data
+# [crack_size, vibration_level]
+
+X_train = [
+    [1, 2],   # No Damage
+    [2, 3],   # No Damage
+    [5, 6],   # Minor Damage
+    [6, 5],   # Minor Damage
+    [8, 9],   # Severe Damage
+    [9, 8]    # Severe Damage
+]
+
+# Labels
+# 0 = No Damage
+# 1 = Minor Damage
+# 2 = Severe Damage
+
+y_train = [0, 0, 1, 1, 2, 2]
+
+# Create KNN Classifier
+model = KNeighborsClassifier(n_neighbors=1)
+
+# Train Model
+model.fit(X_train, y_train)
+
+# Test Data
+test_data = [[7, 8]]
+
+# Predict Damage Class
+prediction = model.predict(test_data)
+
+# Display Result
+print("Test Data:", test_data)
+
+if prediction[0] == 0:
+    print("Predicted Result: No Damage")
+
+elif prediction[0] == 1:
+    print("Predicted Result: Minor Damage")
+
+else:
+    print("Predicted Result: Severe Damage")
+
+# Visualization
+
+for i in range(len(X_train)):
+
+    if y_train[i] == 0:
+        plt.scatter(X_train[i][0], X_train[i][1], color='green', label='No Damage')
+
+    elif y_train[i] == 1:
+        plt.scatter(X_train[i][0], X_train[i][1], color='orange', label='Minor Damage')
+
+    else:
+        plt.scatter(X_train[i][0], X_train[i][1], color='red', label='Severe Damage')
+
+# Plot Test Data
+plt.scatter(test_data[0][0], test_data[0][1],
+            color='blue', marker='x', s=200, label='Test Data')
+
+# Labels and Title
+plt.xlabel("Crack Size")
+plt.ylabel("Vibration Level")
+plt.title("AIPR Structure Damage Classification")
+
+plt.grid(True)
+plt.show()
